@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: rules-api
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/rulesdb
+    username: postgres
+    password: postgres
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:db/schema.sql
