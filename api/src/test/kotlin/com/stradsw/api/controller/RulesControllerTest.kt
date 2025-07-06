@@ -1,5 +1,6 @@
 package com.stradsw.api.controller
 
+import com.stradsw.api.config.TestConfig
 import com.stradsw.api.model.RulesRequest
 import com.stradsw.api.model.RulesResponse
 import com.stradsw.service.model.Rule
@@ -10,12 +11,14 @@ import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest
 import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 
-@WebFluxTest(RulesController::class)
+@WebFluxTest(controllers = [RulesController::class])
+@Import(TestConfig::class)
 class RulesControllerTest {
 
     @Autowired
@@ -28,7 +31,8 @@ class RulesControllerTest {
     fun `createRule should return created rule`() {
         val request = RulesRequest("Test Rule", "Description")
         val rule = Rule(1L, "Test Rule", "Description")
-        `when`(rulesService.createRule(any(Rule::class.java))).thenReturn(Mono.just(rule))
+        val inputRule = Rule(null, "Test Rule", "Description")
+        `when`(rulesService.createRule(inputRule)).thenReturn(Mono.just(rule))
 
         webTestClient.post()
             .uri("/rules")
@@ -75,7 +79,8 @@ class RulesControllerTest {
     fun `updateRule should return updated rule`() {
         val request = RulesRequest("Updated Rule", "Updated Description")
         val rule = Rule(1L, "Updated Rule", "Updated Description")
-        `when`(rulesService.updateRule(any(Rule::class.java))).thenReturn(Mono.just(rule))
+        val inputRule = Rule(1L, "Updated Rule", "Updated Description")
+        `when`(rulesService.updateRule(inputRule)).thenReturn(Mono.just(rule))
 
         webTestClient.put()
             .uri("/rules/1")
